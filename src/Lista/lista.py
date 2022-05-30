@@ -1,5 +1,6 @@
 from src.Lista.no import Node
 from flask import jsonify
+from src.tads.medico import Medico
 
 class ListaEncadeada:
     def __init__(self):
@@ -94,7 +95,7 @@ class ListaEncadeada:
 
 
 
-    def pesquisa_medicos_por_area_atuacao(self, dados):
+    def pesquisa_medicos_por_area_atuacao(self, area_value):
         contents = self.inicio
         content_array = []
         if contents is None:
@@ -114,201 +115,29 @@ class ListaEncadeada:
 
 
 
-    def remover_cadastro(self, informacoes):
-        current_node = self.inicio
+    def remover_cadastro(self, cpf):
 
-        if current_node != None:
-            if current_node.dados == informacoes:
-                self.inicio = current_node.proximo
-                current_node = None
-                return
+        if self.inicio is None:
+            return
 
-            while current_node != None:
-                if current_node.dados == informacoes:
-                    break
-                prev = current_node
-                current_node = current_node.proximo
+        left_node = None
+        curr_node = self.inicio
+        cpf_atual = curr_node.dados.cpf
 
-        if current_node == None:
-            return ("lisa vazia")
+        if cpf_atual == cpf:
+            self.inicio = curr_node.proximo
 
-        prev.proximo = current_node.proximo
-        current_node = None
+        while True:
+            left_node = curr_node
+            curr_node = curr_node.proximo
 
+            if curr_node is None:
+                break
 
-
+            if curr_node.dados.cpf == cpf:
+                left_node.proximo = curr_node.proximo
 
 
-patient = {
-    "nome": "Marcelo Almeida Barbosa",
-    "data_nasc": "2022-08-19",
-    "cpf": "14946804676",
-    "rg": "21381230",
-    "tel": "3998231101",
-    "email": "cellort567@gmail.com",
-    "endereco": {
-        "rua": "trazibulo jason",
-        "bairro": "Sao Pedro",
-        "cidade": "Almenara",
-        "estado": "MG",
-        "numero": "1143",
-        "cep": "39900000"
-    },
-    "cartao_sus": "338847632"
-}
-
-patient2 = {
-    "nome": "Marcelo Almeida Barbosa",
-    "data_nasc": "2022-08-19",
-    "cpf": "00564801640",
-    "rg": "21381230",
-    "tel": "3998231101",
-    "email": "cellort567@gmail.com",
-    "endereco": {
-        "rua": "trazibulo jason",
-        "bairro": "Sao Pedro",
-        "cidade": "Almenara",
-        "estado": "MG",
-        "numero": "1143",
-        "cep": "39900000"
-    },
-    "cartao_sus": "338847632"
-}
-
-patient3 = {
-    "nome": "Marcelo Almeida Barbosa",
-    "data_nasc": "2022-08-19",
-    "cpf": "88999887626",
-    "rg": "21381230",
-    "tel": "3998231101",
-    "email": "cellort567@gmail.com",
-    "endereco": {
-        "rua": "trazibulo jason",
-        "bairro": "Sao Pedro",
-        "cidade": "Almenara",
-        "estado": "MG",
-        "numero": "1143",
-        "cep": "39900000"
-    },
-    "cartao_sus": "338847632"
-}
 
 
-cpf = "00564801640"
-
-lista_medicos = ListaEncadeada()
-# dados medicos
-medic = {
-    "nome": "Marcelo Almeida Barbosa",
-    "data_nasc": "2022-08-19",
-    "cpf": "88999887626",
-    "rg": "21381230",
-    "tel": "3998231101",
-    "email": "cellort567@gmail.com",
-    "endereco": {
-        "rua": "trazibulo jason",
-        "bairro": "Sao Pedro",
-        "cidade": "Almenara",
-        "estado": "MG",
-        "numero": "1143",
-        "cep": "39900000"
-    },
-    "area-of-action": "Cardiologia",
-    "specialization": "Tomografia computadorizada",
-    "crm": {
-        "number": "056024",
-        "uf": "SP"
-    },
-    "horarios": {
-        "days": {
-            "segunda": {
-                "horario_atendimento": "13h as 19h",
-                "periodo_dia": "tarde"
-            },
-            "terça": {
-                "horario_atendimento": "13h as 19h",
-                "periodo_dia": "tarde"
-            }
-        }
-    }
-
-}
-
-medic2 = {
-    "nome": "Marcelo Almeida Barbosa",
-    "data_nasc": "2022-08-19",
-    "cpf": "7632370987",
-    "rg": "21381230",
-    "tel": "3998231101",
-    "email": "cellort567@gmail.com",
-    "endereco": {
-        "rua": "trazibulo jason",
-        "bairro": "Sao Pedro",
-        "cidade": "Almenara",
-        "estado": "MG",
-        "numero": "1143",
-        "cep": "39900000"
-    },
-    "area-of-action": "Cardiologia",
-    "specialization": "Tomografia computadorizada",
-    "crm": {
-        "number": "056024",
-        "uf": "SP"
-    },
-    "horarios": {
-        "days": {
-            "segunda": {
-                "horario_atendimento": "13h as 19h"
-            },
-            "terça": {
-                "horario_atendimento": "13h as 19h"
-            }
-        }
-    }
-
-}
-
-medic3 = {
-    "nome": "Marcelo Almeida Barbosa",
-    "data_nasc": "2022-08-19",
-    "cpf": "98264908921",
-    "rg": "21381230",
-    "tel": "3998231101",
-    "email": "cellort567@gmail.com",
-    "endereco": {
-        "rua": "trazibulo jason",
-        "bairro": "Sao Pedro",
-        "cidade": "Almenara",
-        "estado": "MG",
-        "numero": "1143",
-        "cep": "39900000"
-    },
-    "area-of-action": "Cardiologia",
-    "specialization": "Tomografia computadorizada",
-    "crm": {
-        "number": "056024",
-        "uf": "SP"
-    },
-    "horarios": {
-        "days": {
-            "segunda": {
-                "horario_atendimento": "13h as 19h"
-            },
-            "terça": {
-                "horario_atendimento": "13h as 19h"
-            }
-        }
-    }
-
-}
-
-# cpf_medico = "98264908921"
-# area_de_atuacao = "Cardiologia"
-
-lista_medicos.append(medic)
-lista_medicos.append(medic2)
-lista_medicos.append(medic3)
-
-dados_medicos = lista_medicos.display()
-print(dados_medicos)
 
