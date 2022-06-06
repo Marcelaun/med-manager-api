@@ -1,15 +1,21 @@
+#IMPORTAÇÕES
 from src.Lista.lista import ListaEncadeada
 from src.Queue.def_queue import Queue
 import PySimpleGUI as sg
 import datetime as dt
+
+#ESTRUTURAS DE DADOS INICIALIZADAS
 fila_clientes = Queue()
 lista_medicos = ListaEncadeada()
 lista_pacientes = ListaEncadeada()
 
+#IMPORTAÇÕES DOS TIPOS ABSTRATOS DE DADOS
 from src.tads.medico import Medico
 from src.tads.paciente import Paciente
 from src.tads.cadastro_fila_espera import Cadastro_Fila_Espera
 
+
+#TELAS DO PROGRAMA
 def second_window():
 
     layout = [[sg.Text('The second form is small \nHere to show that opening a window using a window works')],
@@ -81,13 +87,84 @@ def remove_pacient_window():
               [sg.Text('CPF:', size=(15, 1)), sg.InputText()],
               [sg.Text('-------------------------------------------------------------------------'
                        '------------------------------------------------------------------')],
-              [sg.Text('Chamar cliente para atendimento.')],
+
               [sg.Button('Deletar'), sg.Cancel('Cancelar')]
 
               ]
 
     window = sg.Window('Remover Cadastro de Pacientes', layout)
     event, values = window.read()
+
+    if event == 'Deletar':
+        pop_up_value = sg.popup_yes_no('Tem certeza que deseja deletar esse registro?')
+        if pop_up_value == 'Yes':
+            print('entrou no yes')
+            lista_pacientes.remover_cadastro(values[0])
+            lista_pacientes.display()
+        elif pop_up_value == 'No':
+            print('entrou no No')
+
+    window.close()
+
+
+def search_medic():
+    layout = [[sg.Text('Insira o CPF do médico.')],
+              [sg.Text('CPF:', size=(15, 1)), sg.InputText()],
+              [sg.Text('-------------------------------------------------------------------------'
+                       '------------------------------------------------------------------')],
+
+              [sg.Button('Procurar'), sg.Cancel('Cancelar')]
+
+              ]
+
+    window = sg.Window('Procurar Cadastro', layout)
+    event, values = window.read()
+
+    if event == 'Procurar':
+        lista_medicos.pesquisa_cadastro_por_cpf(values[0])
+
+    window.close()
+
+
+def search_pacient():
+    layout = [[sg.Text('Insira o CPF do paciente.')],
+              [sg.Text('CPF:', size=(15, 1)), sg.InputText()],
+              [sg.Text('-------------------------------------------------------------------------'
+                       '------------------------------------------------------------------')],
+
+              [sg.Button('Procurar'), sg.Cancel('Cancelar')]
+
+              ]
+
+    window = sg.Window('Procurar Cadastro', layout)
+    event, values = window.read()
+
+    if event == 'Procurar':
+        lista_pacientes.pesquisa_cadastro_por_cpf(values[0])
+
+    window.close()
+
+def search_medic_by_area_of_action():
+    layout = [[sg.Text('Insira a area de atuação que deseja pesquisar.')],
+              [sg.Text('Area de atuação:', size=(15, 1)), sg.InputText()],
+              [sg.Text('-------------------------------------------------------------------------'
+                       '------------------------------------------------------------------')],
+
+              [sg.Button('Procurar Médicos'), sg.Cancel('Cancelar')]
+
+              ]
+
+    window = sg.Window('Procurar Cadastro', layout)
+    event, values = window.read()
+
+    if event == 'Procurar Médicos':
+       dados = lista_medicos.pesquisa_medicos_por_area_atuacao(values[0])
+
+       for medico in dados:
+           print('Medico:\n', medico)
+
+    window.close()
+
 
 
 def remove_medic_window():
@@ -97,7 +174,6 @@ def remove_medic_window():
                        '------------------------------------------------------------------')],
 
               [sg.Button('Deletar'), sg.Cancel('Cancelar')]
-
               ]
 
     window = sg.Window('Remover Cadastro de Medicos', layout)
@@ -145,22 +221,31 @@ def day_queue_attendance():
 
 
     window.close()
+
+
+#TELA PRINCIPAL
 def test_menus():
 
     sg.theme('LightGreen')
     sg.set_options(element_padding=(0, 0))
 
-    # ------ Menu Definition ------ #
+    #DEFINIÇÃO DOS MENUS#
     menu_def = [['&Salvar', ['&Salvar Dados       Ctrl-S', '&Sair do programa']],
                 ['&Cadastro', ['---', '&Cadastro de Médicos', '&Cadastro de Pacientes']],
                 ['&Listagem', ['---', '&Listar Médicos', '&Listar Pacientes']],
                 ['&Remover Cadastros', ['---', '&Remover Médico', '&Remover Paciente']],
                 ['&Fila de Espera', ['&Fila de atendimento do dia']],
-                ['&Ajuda', '&Sobre...'], ]
+                ['&Procurar', ['&Procurar Médico', '&Procurar Pacientes', '&Procurar Médicos/Área de Atuação']],
+                ['&Ajuda', '&Sobre...'],
+                ['&Funções com árvores', ['&Cadastro', ['&Cadastrar Médicos', '&Cadastrar Pacientes'],
+                '&Listagem', ['&Listagem de Médicos', '&Listagem de Pacientes'],
+                '&Busca', ['&Busca de Médicos', '&Busca de Pacientes'],
+                '&Remoção', ['&Remoção de Médicos', '&Remoção de Pacientes']], ]
+                ]
 
     right_click_menu = ['Unused', ['Right', '!&Click', '&Menu', 'E&xit', 'Propriedades']]
 
-    # ------ GUI Defintion ------ #
+    #DEFINIÇÃO DA GUI - (INTERFACE GRÁFICA DO USUARIO)#
     layout = [
         [sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
         [sg.Text('Bem vindo!')],
@@ -173,13 +258,13 @@ def test_menus():
                        default_button_element_size=(12, 1),
                        right_click_menu=right_click_menu)
 
-    # ------ Loop & Process button menu choices ------ #
+    #LOOP DO MENU E ESCOLHAS DOS BOTÕES#
     while True:
         event, values = window.read()
         if event in (sg.WIN_CLOSED, 'Sair do programa'):
             break
         print(event, values)
-        # ------ Process menu choices ------ #
+        #ESCOLHAS DO MENU ATRAVES DO EVENT#
         if event == 'Sobre...':
             window.disappear()
             sg.popup('Sobre esse programa', 'Versão 1.0',
@@ -208,6 +293,16 @@ def test_menus():
 
         elif event == 'Remover Paciente':
             remove_pacient_window()
+
+        elif event == 'Procurar Pacientes':
+            search_pacient()
+
+        elif event == 'Procurar Médico':
+            search_medic()
+
+        elif event == 'Procurar Médicos/Área de Atuação':
+            search_medic_by_area_of_action()
+
 
 
 

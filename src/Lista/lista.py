@@ -46,7 +46,7 @@ class ListaEncadeada:
 
         return node_data
 
-    #display dados na lista
+        # display dados na lista
 
     def display(self):
         contents = self.inicio
@@ -62,38 +62,35 @@ class ListaEncadeada:
         print('--------')
         return content_array
 
-
-
-    def pesquisa_paciente(self, dados):
+    def pesquisa_cadastro_por_cpf(self, cpf):
         contents = self.inicio
         if contents is None:
             print("lista vazia!")
 
         while contents:
+            cpf_atual = contents.dados.cpf
             dados_atuais = contents.dados
-            if dados in dados_atuais.values():
+            if cpf_atual == cpf:
                 print("dados atuais", dados_atuais)
-                print(f"value: {dados}")
+                print(f"value: {dados_atuais.cpf}")
                 return dados_atuais
 
             contents = contents.proximo
 
-    def pesquisa_medico(self, dados):
+    def pesquisa_medico(self, cpf):
         contents = self.inicio
         if contents is None:
             print("lista vazia!")
 
         while contents:
+            cpf_atual = contents.dados.cpf
             dados_atuais = contents.dados
-            if dados in dados_atuais.values():
+            if cpf_atual == cpf:
                 print("dados atuais", dados_atuais)
-                print(f"value: {dados}")
+                print(f"value: {dados_atuais.cpf}")
                 return dados_atuais
 
             contents = contents.proximo
-
-
-
 
     def pesquisa_medicos_por_area_atuacao(self, area_value):
         contents = self.inicio
@@ -102,18 +99,14 @@ class ListaEncadeada:
             print("lista vazia!")
 
         while contents:
+            area_atuacao_atual = contents.dados.area_atuacao
             dados_atuais = contents.dados
-            if dados in dados_atuais.values():
-                print("dados atuais", dados_atuais)
-                print(f"value: {dados}")
+            if area_atuacao_atual == area_value:
                 content_array.append(dados_atuais)
 
             contents = contents.proximo
 
         return content_array
-
-
-
 
     def remover_cadastro(self, cpf):
 
@@ -136,8 +129,6 @@ class ListaEncadeada:
 
             if curr_node.dados.cpf == cpf:
                 left_node.proximo = curr_node.proximo
-
-
 
 
 
